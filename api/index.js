@@ -2,6 +2,8 @@ const express = require('express');
 const connectDB = require('../config/db');
 const runCryptoJob = require('../jobs/cryptoJob');
 const Crypto = require('../models/Crypto');
+const calculateStandardDeviation = require('../utils/StandardDeviation');
+
 // const serverless = require('serverless-http');
 
 const app = express();
@@ -12,58 +14,52 @@ connectDB();
 // Start the crypto job
 runCryptoJob();
 
-app.get('/',async(req,res)=>{
-  res.send('hello')
-})
-
-// Function to calculate standard deviation
-const calculateStandardDeviation = (prices) => {
-    const n = prices.length;
-    if (n === 0) return 0;
-
-    const mean = prices.reduce((acc, val) => acc + val, 0) / n;
-    const variance = prices.reduce((acc, val) => acc + (val - mean) ** 2, 0) / n;
-
-    return Math.sqrt(variance);
-};
-
-// Function to escape special regex characters
-function escapeRegex(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+app.get('/', async (req, res) => {
+  try {
+    res.send("Hello, the assignment is done. You can check the following routes:\n" +
+             "1. /deviation?coin=bitcoin\n" +
+             "2. /deviation?coin=ethereum\n" +
+             "3. /deviation?coin=matic\n" +
+             "4. /stats?coin=bitcoin\n" +
+             "5. /stats?coin=ethereum\n" +
+             "6. /stats?coin=matic");
+  } catch (error) {
+    res.status(500).send('An error occurred');
   }
+});
+
+
   
-  // API to get standard deviation of the requested cryptocurrency
+// API to get standard deviation of the requested cryptocurrency
 app.get('/deviation', async (req, res) => {
     const { coin } = req.query;
+    
   
     if (!coin) {
       return res.status(400).json({ error: 'Coin parameter is required' });
     }
   
     try {
-      const escapedCoin = escapeRegex(coin);
-  
-      // Fetch the last 100 records for the requested cryptocurrency
+      
       const records = await Crypto.find({
-        name: { $regex: new RegExp(`^${escapedCoin}$`, 'i') },
+        name: { $regex: new RegExp(`^${coin}$`, 'i') },
       })
-        .sort({ fetchedAt: -1 }) // Sort by most recent
-        .limit(100); // Limit to last 100 records
+        .sort({ fetchedAt: -1 }) 
+        .limit(100); 
   
-      // If there are no records, return a response indicating that
+      
       if (records.length === 0) {
         return res
           .status(404)
           .json({ error: `No records found for ${coin}` });
       }
   
-      // Extract prices
+     
       const prices = records.map((record) => record.priceUsd);
   
-      // Calculate the standard deviation
       const stdDeviation = calculateStandardDeviation(prices);
   
-      // Return the result
+      
       res.json({ coin, standardDeviation: stdDeviation.toFixed(2) });
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -73,7 +69,7 @@ app.get('/deviation', async (req, res) => {
     }
   });
   
-
+// API to get stats of the requested cryptocurrency
 app.get('/stats', async (req, res) => {
   const { coin } = req.query;
 
@@ -82,15 +78,15 @@ app.get('/stats', async (req, res) => {
   }
 
   try {
-    // Find the latest data for the requested coin
-    const latestData = await Crypto.findOne({ name: { $regex: new RegExp(coin, 'i') } }) // case-insensitive search
-      .sort({ fetchedAt: -1 }); // sort by fetchedAt to get the latest
+    
+    const latestData = await Crypto.findOne({ name: { $regex: new RegExp(coin, 'i') } }) 
+      .sort({ fetchedAt: -1 }); 
 
     if (!latestData) {
       return res.status(404).json({ error: 'Coin not found' });
     }
 
-    // Format and send the response
+    
     const response = {
       price: latestData.priceUsd,
       marketCap: latestData.marketCapUsd,
@@ -104,7 +100,7 @@ app.get('/stats', async (req, res) => {
   }
 });
 
-// Start the server
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

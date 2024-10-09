@@ -2,7 +2,7 @@ const express = require('express');
 const connectDB = require('../config/db');
 const runCryptoJob = require('../jobs/cryptoJob');
 const Crypto = require('../models/Crypto');
-const serverless = require('serverless-http');
+// const serverless = require('serverless-http');
 
 const app = express();
 
@@ -110,5 +110,4 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-module.exports = app;
-module.exports.handler = serverless(app);
+

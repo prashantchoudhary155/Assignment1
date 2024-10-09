@@ -1,4 +1,4 @@
-const Crypto = require('../models/Crypto');
+const Crypto = require('../models/crypto');
 
 const storeCryptoData = async (cryptoData) => {
     try {

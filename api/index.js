@@ -12,6 +12,10 @@ connectDB();
 // Start the crypto job
 runCryptoJob();
 
+app.get('/',async(req,res)=>{
+  res.send('hello')
+})
+
 // Function to calculate standard deviation
 const calculateStandardDeviation = (prices) => {
     const n = prices.length;

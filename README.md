@@ -41,7 +41,7 @@ Follow these steps to set up and run the application:
 ## API Endpoints
 The following API endpoints are available:
 
-## GET /deviation?coin=<coin-name>:
+**GET /deviation?coin=<coin-name>**:
 Description: Retrieves the deviation data for the specified cryptocurrency.
 Parameters:
 coin: The cryptocurrency for which to fetch the deviation data. Acceptable values:
@@ -49,7 +49,7 @@ bitcoin
 ethereum
 matic
 
-## GET /stats?coin=<coin-name>:
+**GET /stats?coin=<coin-name>**:
 Description: Retrieves statistics for the specified cryptocurrency.
 Parameters:
 coin: The cryptocurrency for which to fetch the statistics. Acceptable values:

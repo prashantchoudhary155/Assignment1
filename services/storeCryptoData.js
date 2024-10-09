@@ -1,4 +1,4 @@
-const Crypto = require('../../models/Crypto'); // Use a relative path
+const Crypto = require('../models/Crypto'); // Use a relative path
 
 const storeCryptoData = async (cryptoData) => {
     try {

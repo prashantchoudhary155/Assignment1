@@ -1,7 +1,9 @@
 const express = require('express');
-const connectDB = require('./config/db');
+const connectDB = require('../config/db');
 const runCryptoJob = require('./jobs/cryptoJob'); // Import the function
-const Crypto = require('./models/Crypto'); // Add this line to import the model
+const Crypto = require('../models/Crypto'); // Add this line to import the model
+const serverless = require('serverless-http');
+
 
 const app = express();
 

@@ -2,7 +2,7 @@ const express = require('express');
 const connectDB = require('../config/db');
 const runCryptoJob = require('../jobs/cryptoJob');
 const Crypto = require('../models/crypto');
-const calculateStandardDeviation = require('../utils/standardDeviation');
+const calculateStandardDeviation = require('../utils/standarddeviation');
 
 // const serverless = require('serverless-http');
 
